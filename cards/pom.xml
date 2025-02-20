@@ -97,7 +97,7 @@
                 <configuration>
                     <to>
                         <image>
-                            ankushgoyal11/${project.artifactId}:s4
+                            ankushgoyal11/${project.artifactId}:s6
                         </image>
                     </to>
                 </configuration>
