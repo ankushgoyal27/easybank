@@ -23,15 +23,25 @@ spring:
       username: "guest"
       password: "guest"
 
-encrypt:
-  key: "3F3BC1AB91FD472C51BA56BB3F359"
-server:
-  port: 8071
-
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+  health:
+    liveness-state:
+      enabled: true
+    readiness-state:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+encrypt:
+  key: "3F3BC1AB91FD472C51BA56BB3F359"
+server:
+  port: 8071
+
 
 
