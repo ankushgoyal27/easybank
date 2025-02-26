@@ -1,6 +1,7 @@
 package com.easybytes.accounts.mapper;
 
 import com.easybytes.accounts.dto.CustomerDTO;
+import com.easybytes.accounts.dto.CustomerDetailsDto;
 import com.easybytes.accounts.entity.Customer;
 
 public class CustomerMapper {
@@ -10,6 +11,13 @@ public class CustomerMapper {
         customerDto.setEmail(customer.getEmail());
         customerDto.setMobileNumber(customer.getMobileNumber());
         return customerDto;
+    }
+
+    public static CustomerDetailsDto mapToCustomerDetailsDto(Customer customer, CustomerDetailsDto customerDetailsDto) {
+        customerDetailsDto.setName(customer.getName());
+        customerDetailsDto.setEmail(customer.getEmail());
+        customerDetailsDto.setMobileNumber(customer.getMobileNumber());
+        return customerDetailsDto;
     }
 
     public static Customer mapToCustomer(CustomerDTO customerDto, Customer customer) {
