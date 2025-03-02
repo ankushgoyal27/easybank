@@ -58,6 +58,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
 		</dependency>
 		<dependency>
@@ -133,7 +137,7 @@
 				<configuration>
 					<to>
 						<image>
-							ankushgoyal11/${project.artifactId}:s9
+							ankushgoyal11/${project.artifactId}:s10
 						</image>
 					</to>
 				</configuration>

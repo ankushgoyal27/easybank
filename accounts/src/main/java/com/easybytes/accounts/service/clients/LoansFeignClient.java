@@ -1,18 +1,17 @@
 package com.easybytes.accounts.service.clients;
 
-import com.easybytes.accounts.dto.CardsDto;
-import com.easybytes.accounts.dto.LoansDto;
+ import com.easybytes.accounts.dto.LoansDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient("loans")
+@FeignClient(name = "loans", fallback = LoansFallback.class)
 public interface LoansFeignClient {
 
     @GetMapping(path = "/api/fetch", consumes = "application/json")
-    public ResponseEntity<LoansDto> fetchLoanetails(
+    public ResponseEntity<LoansDto> fetchLoanDetails(
             @RequestHeader("easybank-correlation-id") String correlationId,
             @RequestParam String mobileNumber);
 }

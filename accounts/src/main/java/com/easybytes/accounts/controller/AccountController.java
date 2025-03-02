@@ -6,6 +6,8 @@ import com.easybytes.accounts.dto.CustomerDTO;
 import com.easybytes.accounts.dto.ErrorResponseDTO;
 import com.easybytes.accounts.dto.ResponseDTO;
 import com.easybytes.accounts.service.IAccountsService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,6 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -23,7 +27,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-    @Tag(
+import java.util.concurrent.TimeoutException;
+
+@Tag(
             name = "CRUD REST APIs for Accounts in EazyBank",
             description = "CRUD REST APIs in EazyBank to CREATE, UPDATE, FETCH AND DELETE account details"
     )
@@ -31,6 +37,8 @@ import org.springframework.web.bind.annotation.*;
     @RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
     @Validated
 public class AccountController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     private IAccountsService iAccountsService;
 
@@ -193,10 +201,18 @@ public class AccountController {
                     )
             )
     })
+    @Retry(name = "getBuildInfo", fallbackMethod = "getBuildInfoFallback")
     @GetMapping("/build-info")
     public ResponseEntity<String> getBuildInfo(){
-
+        logger.debug("getBuildInfo() is invoked");
         return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+    }
+
+    public ResponseEntity<String> getBuildInfoFallback(Throwable throwable){
+        logger.debug("getBuildInfoFallback() is invoked");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("0.9");
     }
 
     @Operation(
@@ -216,11 +232,16 @@ public class AccountController {
                     )
             )
     })
+    @RateLimiter(name = "getJavaVersion", fallbackMethod = "getJavaVersionFallback")
     @GetMapping("/java-version")
     public ResponseEntity<String> getJavaVersion(){
         return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
     }
 
+    public ResponseEntity<String> getJavaVersionFallback(){
+        return ResponseEntity.status(HttpStatus.OK).body("Java 21");
+    }
+
     @Operation(
             summary = "Get Build information",
             description = "Get Build information that is deployed into accounts microservice"
@@ -238,8 +259,9 @@ public class AccountController {
                     )
             )
     })
+
     @GetMapping("/contact-info")
-    public ResponseEntity<AccountsContactInfoDto> getContactInfo(){
+    public ResponseEntity<AccountsContactInfoDto> getContactInfo() {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(accountsContactInfoDto);
