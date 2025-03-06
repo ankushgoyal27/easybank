@@ -31,8 +31,15 @@ management:
     health:
       probes:
         enabled: true
+  metrics:
+    tags:
+      applicaton: ${spring.application.name}
 
 encrypt:
   key: "3F3BC1AB91FD472C51BA56BB3F359"
 server:
   port: 8071
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
