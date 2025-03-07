@@ -14,7 +14,7 @@ MICROSERVICES=(
 )
 
 # Define image tag
-IMAGE_TAG="s11"
+IMAGE_TAG="s12"
 
 # Ensure Docker is running
 if ! docker info >/dev/null 2>&1; then
