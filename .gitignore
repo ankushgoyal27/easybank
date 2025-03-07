@@ -1,1 +1,4 @@
 .idea
+
+docker-compose/default/..observability
+docker-compose/default/.data
