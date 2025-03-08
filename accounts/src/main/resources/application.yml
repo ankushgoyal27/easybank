@@ -24,12 +24,31 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
-
+    function:
+      definition: updateCommunication
+    stream:
+      bindings:
+        updateCommunication-in-0:
+          destination: communication-sent
+          group: ${spring.application.name}
+        sendCommunication-out-0:
+          destination: send-communication
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    connection-timeout: 10s
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
   endpoint:
     shutdown:
       access: unrestricted
@@ -39,14 +58,10 @@ management:
   info:
     env:
       enabled: true
-  health:
-    readiness-state:
-      enabled: true
-    liveness-state:
-      enabled: true
   metrics:
     tags:
-      applicaton: ${spring.application.name}
+      application: ${spring.application.name}
+
 
 eureka:
   instance:
@@ -60,13 +75,13 @@ eureka:
 info:
   app:
     name: "accounts"
-    description: Easy bank accounts application
-    version: 1.0
+    description: "Eazy Bank Accounts Application"
+    version: "1.0.0"
 
 logging:
   level:
     com:
-      easybytes:
+      eazybytes:
         accounts: DEBUG
   pattern:
     level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"

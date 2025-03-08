@@ -11,10 +11,11 @@ MICROSERVICES=(
     "eurekaserver" "./eurekaserver"
     "gatewayserver" "./gatewayserver"
     "configserver" "./configserver"
+    "message" "./message"
 )
 
 # Define image tag
-IMAGE_TAG="s12"
+IMAGE_TAG="s13"
 
 # Ensure Docker is running
 if ! docker info >/dev/null 2>&1; then
